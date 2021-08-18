@@ -5,18 +5,9 @@ Please make sure you have the following installed
 
 
 ## Setting up
-1. [Create a new git repository](https://docs.github.com/en/get-started/quickstart/create-a-repo) `recruit-interview` in your personal github profile.
-2. If the repository is private, [make sure to invite](https://docs.github.com/en/github/setting-up-and-managing-your-github-user-account/managing-access-to-your-personal-repositories/inviting-collaborators-to-a-personal-repository) `Corei13` as a collaborator.
-3. Run the following commands in that folder to push to your personal repository, 
-    ```bash
-    git init
-    git add .
-    git commit -m "first commit"
-    git remote add origin git@github.com:YOUR_GITHUB_USERNAME/recruit-interview.git
-    git push -u origin master
-    ```
-4. Send us the link of your github repository
-5. Run following command to install dependencies
+1. Fork this repository to your personal github account
+2. Send us the link of your github repository in slack
+3. Run following command to install dependencies
     ```bash
     yarn
     ```
