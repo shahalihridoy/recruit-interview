@@ -1,5 +1,5 @@
 import dynamic from "next/dynamic";
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import styles from "../styles/Snake.module.css";
 
 const Config = {
@@ -78,8 +78,6 @@ const Snake = () => {
   const [food, setFood] = useState({ x: 4, y: 10 });
   const [score, setScore] = useState(0);
 
-  const snakeRunTimerRef = useRef();
-
   // move the snake
   useEffect(() => {
     const runSingleStep = () => {
@@ -117,11 +115,9 @@ const Snake = () => {
 
     runSingleStep();
 
-    if (snakeRunTimerRef.current) clearInterval(snakeRunTimerRef.current);
+    let timer = setInterval(runSingleStep, 250);
 
-    snakeRunTimerRef.current = setInterval(runSingleStep, 250);
-
-    return () => clearInterval(snakeRunTimerRef.current);
+    return () => clearInterval(timer);
   }, [direction, food]);
 
   // update score whenever head touches a food
@@ -133,9 +129,14 @@ const Snake = () => {
       setSnake((snake) => [...snake, head]);
 
       let newFood = getRandomCell();
+
+      while (isSnake(newFood)) {
+        newFood = getRandomCell();
+      }
+
       setFood(newFood);
     }
-  }, [snake]);
+  }, [isFood, snake]);
 
   useEffect(() => {
     const handleNavigation = (event) => {
@@ -175,11 +176,33 @@ const Snake = () => {
     return () => window.removeEventListener("keydown", handleNavigation);
   }, []);
 
+  const test = () => {
+    // let newFood = getRandomCell();
+    // setFood(newFood);
+
+    const timer = setTimeout(() => {
+      clearTimeout(timer);
+    }, 10000);
+  };
+
+  useEffect(() => {
+    test();
+
+    const timer = setInterval(() => {
+      test();
+    }, 3000);
+
+    return () => clearInterval(timer);
+  }, []);
+
   // ?. is called optional chaining
   // see: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Optional_chaining
   const isEqual = (a, b) => a?.x === b?.x && a?.y === b?.y;
 
-  const isFood = ({ x, y }) => food?.x === x && food?.y === y;
+  const isFood = useCallback(
+    ({ x, y }) => food?.x === x && food?.y === y,
+    [food]
+  );
 
   const isSnake = ({ x, y }) =>
     snake.find((position) => position.x === x && position.y === y);
